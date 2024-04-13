@@ -19,8 +19,13 @@ def ask(prompt):
         "Content-Type": "application/json",
         "Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"  # Replace with your OpenAI API key
     }
-    response = requests.post(url, json=payload, headers=headers)
-    return response.json()["choices"][0]["text"]
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()  # Raise an error for non-2xx responses
+        return response.json()["choices"][0]["text"]
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
 
 def speak(thought):
     with open(memory, 'a') as f:
