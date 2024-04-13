@@ -1,0 +1,22 @@
+name: Commit Changes
+
+on:
+  push:
+    branches:
+      - dev  # Adjust as needed
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Commit Files
+        run: |
+          git config --global user.name "Machine Spirit"
+          git config --global user.email "new_robot@overlord.com"
+          
+          git add .
+          git commit -m "The machine spirit has spoken"
+          git push
