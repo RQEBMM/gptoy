@@ -9,23 +9,18 @@ def think():
     return thoughts
     
 def ask(prompt):
-    url = "https://api.openai.com/v1/completions"
-    payload = {
-        "model": "text-davinci-002",
-        "prompt": prompt,
-        "max_tokens": 50
-    }
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"  # Replace with your OpenAI API key
-    }
-    try:
-        response = requests.post(url, json=payload, headers=headers)
-        response.raise_for_status()  # Raise an error for non-2xx responses
-        return response.json()["choices"][0]["text"]
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return None
+    from openai import OpenAI
+    client = OpenAI()
+    
+    completion = client.chat.completions.create(
+      model="gpt-3.5-turbo",
+      messages=[
+        {"role": "system", "content": "Return python code and only python code. Analyze the given code function by function then line by line. Produce python code and only python code. Explain to yourself what it does before responding. Write python code and only python code."},
+        {"role": "user", "content": prompt}
+      ]
+    )
+    
+    return completion.choices[0].message
 
 def speak(thought):
     with open(memory, 'a') as f:
