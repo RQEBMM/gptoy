@@ -11,12 +11,16 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-      
+        
       - name: Commit Files
         run: |
+          python -m pip install -r requirements.txt
+          python spirit/speak.py
+          
           git config --global user.name "Machine Spirit"
           git config --global user.email "new_robot@overlord.com"
-          
           git add .
-          git commit -m "The machine spirit has spoken"
+          git commit -m "The machine spirit has spoken thusly"
           git push
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
